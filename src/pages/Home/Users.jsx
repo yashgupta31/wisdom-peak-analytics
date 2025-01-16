@@ -57,7 +57,7 @@ const Users = () => {
         <Box>
             {/* ------search & filter------- */}
             <Box width={'100%'} mt={'1.4rem'}>
-                <TextField size='small' placeholder="Search name.." sx={{ width: isLargerThan500 ? '50%' : '55%', mr: '0.5rem', borderColor: '1px solid white' }} onChange={(e) => setSearchQuery(e.target.value)} />
+                <TextField size='small' placeholder="Search name.." sx={{ width: isLargerThan500 ? '50%' : '55%', mr: '0.5rem', borderColor: '1px solid white' }} value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
                 <Select size='small' defaultValue={sortOrder} onChange={(e) => setSortOrder(e.target.value)} sx={{ width: isLargerThan700 ? '20%' : isLargerThan500 ? '30%' : '40%' }}>
                     {/* <option value={'placeholder'}>Placeholder</option> */}
                     <MenuItem value={'default'}>Default</MenuItem>
