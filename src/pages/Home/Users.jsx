@@ -53,7 +53,7 @@ const Users = () => {
     const isLargerThan700 = useMediaQuery('(min-width: 700px)');
     const isLargerThan500 = useMediaQuery('(min-width: 500px)');
     const isLargerThan400 = useMediaQuery('(min-width: 400px)');
-    //loading and error show as per request
+    //loading and error show as per request.
     if(loading){
         return <Typography sx={{textAlign: 'center', fontSize: '1.1rem', color: currentTheme=='light'? '#282828': 'white', mt: '3rem'}}>Loading...</Typography>
     }
