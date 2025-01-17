@@ -148,7 +148,7 @@ const Users = () => {
             </Box>
 
             {/* -----pagination------- */}
-            <Pagination count={totalPages} sx={{ mt: '1rem', width: '10rem',
+            <Pagination count={totalPages} sx={{ mt: '1rem', width: '10rem', position: 'fixed', bottom: '1',
                 '& .MuiPaginationItem-root': {
       color: currentTheme === 'light' ? '#282828' : 'white', // Default text color
       borderColor: currentTheme === 'light' ? '#282828' : 'white', // Default border color
