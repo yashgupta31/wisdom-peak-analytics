@@ -10,7 +10,8 @@ import { utils } from '../../utils/utils';
 const Users = () => {
     const dispatch = useDispatch()
     const currentTheme = useSelector((state) => state.theme.theme);
-    const { users } = useSelector(state => state.users);
+    const { users, loading, error } = useSelector(state => state.users);
+    console.log('loading' ,loading)
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -53,12 +54,50 @@ const Users = () => {
     const isLargerThan500 = useMediaQuery('(min-width: 500px)');
     const isLargerThan400 = useMediaQuery('(min-width: 400px)');
 
+    if(loading){
+        return <Typography sx={{textAlign: 'center', fontSize: '1.1rem', color: currentTheme=='light'? '#282828': 'white', mt: '3rem'}}>Loading...</Typography>
+    }
+
+    if(error)return <Typography sx={{textAlign: 'center', fontSize: '1.1rem', color: currentTheme=='light'? '#282828': 'white', mt: '3rem'}}>Error: {error}</Typography>
+
     return (
         <Box>
             {/* ------search & filter------- */}
             <Box width={'100%'} mt={'1.4rem'}>
-                <TextField size='small' placeholder="Search name.." sx={{ width: isLargerThan500 ? '50%' : '55%', mr: '0.5rem', borderColor: '1px solid white' }} value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
-                <Select size='small' defaultValue={sortOrder} onChange={(e) => setSortOrder(e.target.value)} sx={{ width: isLargerThan700 ? '20%' : isLargerThan500 ? '30%' : '40%' }}>
+                <TextField size='small' placeholder="Search name.." sx={{
+                    width: isLargerThan500 ? '50%' : '55%', mr: '0.5rem', borderColor: '1px solid white',
+                    '& .MuiOutlinedInput-root': {
+                        '& fieldset': {
+                            borderColor: currentTheme=='light'? '#282828' :'white', 
+                        },
+                        '&:hover fieldset': {
+                            borderColor: currentTheme=='light'? '#282828' :'white', 
+                        },
+                        '&.Mui-focused fieldset': {
+                            borderColor: currentTheme=='light'? '#282828' :'white',
+                        },
+                    },
+                    '& .MuiInputBase-input': {
+                        color: currentTheme=='light'? '#282828' :'white', // Set the text color to white
+                    }
+                }} value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+                <Select size='small' defaultValue={sortOrder} onChange={(e) => setSortOrder(e.target.value)} sx={{ width: isLargerThan700 ? '20%' : isLargerThan500 ? '30%' : '40%',
+                   '& .MuiOutlinedInput-notchedOutline': {
+      borderColor: currentTheme === 'light' ? '#282828' : 'white', // Apply border color here
+    },
+    '&:hover .MuiOutlinedInput-notchedOutline': {
+      borderColor: currentTheme === 'light' ? '#282828' : 'white', // Hover state
+    },
+    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+      borderColor: currentTheme === 'light' ? '#282828' : 'white', // Focused state
+    },
+    '& .MuiSelect-select': {
+      color: currentTheme === 'light' ? '#282828' : 'white', // Text color
+    },
+    '& .MuiSvgIcon-root': {
+      color: currentTheme === 'light' ? '#282828' : 'white', // Dropdown arrow icon color
+    },
+                 }}>
                     {/* <option value={'placeholder'}>Placeholder</option> */}
                     <MenuItem value={'default'}>Default</MenuItem>
                     <MenuItem value={'ascending'}>Ascending</MenuItem>
@@ -67,7 +106,7 @@ const Users = () => {
             </Box>
             {/* ---------- */}
             {/* --------card container--------- */}
-            <Box mt={'1rem'} display={'flex'} flexWrap={'wrap'} height={'70vh'} sx={{overflowY: 'scroll', scrollbarWidth: 'none', '&::-webkit-scrollbar': {display: 'none'  } }}>
+            <Box mt={'1rem'} display={'flex'} flexWrap={'wrap'} height={'70vh'} sx={{ overflowY: 'scroll', scrollbarWidth: 'none', '&::-webkit-scrollbar': { display: 'none' } }}>
                 {/* --------each card------- */}
                 {
                     paginatedUsers
@@ -85,7 +124,7 @@ const Users = () => {
                         .map((elem, index) => (
                             <Box key={index} className={'eachUser'} width={isLargerThan1350 ? '32%' : isLargerThan1000 ? '32%' : isLargerThan700 ? '49%' : isLargerThan400 ? '90%' : '99%'} height={'13rem'} onClick={() => navigate(`/singleuser/${elem.id}`)} color={currentTheme == 'light' ? '#181818' : 'white'} bgcolor={currentTheme == 'light' ? utils.light.cardBg : utils.dark.cardBg} ml={'auto'} mr={'auto'} mb={'1rem'} p={'1rem'} borderRadius={'8px'} position={'relative'} boxShadow={'rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;'} sx={{ cursor: 'pointer' }}>
                                 <Box>
-                                    <Typography sx={{ fontSize: '1.7rem', borderBottom: '1px solid grey', textAlign: 'center', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{elem.name}</Typography>
+                                    <Typography sx={{ fontSize: '1.7rem', color: currentTheme == 'dark' && '#F87C58', borderBottom: '1px solid grey', textAlign: 'center', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{elem.name}</Typography>
                                     <Typography sx={{ fontSize: '1.1rem' }}>Name</Typography>
                                     <Typography sx={{ fontSize: '0.9rem' }}>{elem.name}</Typography>
                                 </Box>
@@ -100,7 +139,7 @@ const Users = () => {
                                     <Typography sx={{ fontSize: '0.9rem' }}>{elem.address.city}</Typography>
                                 </Box>
 
-                                <Box bgcolor={'#F87C58'} className={'each-user-animation'} width={'100%'} height={'28%'} position={'absolute'} sx={{ opacity: '40%' }} top={0} right={0} borderRadius={'0% 0% 0% 0%'} ></Box>
+                                <Box bgcolor={currentTheme == 'light' ? '#F87C58' : utils.dark.primary} className={'each-user-animation'} width={'100%'} height={'28%'} position={'absolute'} sx={{ opacity: '40%' }} top={0} right={0} borderRadius={'0% 0% 0% 0%'} ></Box>
 
                             </Box>
                         ))
@@ -109,9 +148,27 @@ const Users = () => {
             </Box>
 
             {/* -----pagination------- */}
-            <Pagination count={totalPages} sx={{ mt: '1rem', bgcolor: currentTheme=='light'? '': 'white', width: '10rem' }} onChange={handlePageChange} variant="outlined" shape="rounded" />
+            <Pagination count={totalPages} sx={{ mt: '1rem', width: '10rem',
+                '& .MuiPaginationItem-root': {
+      color: currentTheme === 'light' ? '#282828' : 'white', // Default text color
+      borderColor: currentTheme === 'light' ? '#282828' : 'white', // Default border color
+    },
+    '& .MuiPaginationItem-root:hover': {
+      backgroundColor: currentTheme === 'light' ? '#f0f0f0' : '#333', // Background color on hover
+    },
+    '& .MuiPaginationItem-root.Mui-selected': {
+      color: 'white', // Text color for selected page
+      backgroundColor: currentTheme === 'light' ? '#282828' : '#282828', // Background color for selected page
+      borderColor: currentTheme === 'light' ? '#282828' : 'grey', // Border color for selected page
+    },
+    '& .MuiPaginationItem-root.Mui-selected:hover': {
+      backgroundColor: currentTheme === 'light' ? '#3d3d3d' : '#ddd', // Hover color for selected page
+    },
+             }} onChange={handlePageChange} variant="outlined" shape="rounded" />
         </Box>
     )
 }
 
 export default Users
+
+// bgcolor: currentTheme == 'light' ? '' : '#F87C58'
